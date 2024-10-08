@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContractChecker", "ContractChecker\ContractChecker.csproj", "{0D9AEFB4-BD5F-4C11-9442-99DB22FD3BDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApplication", "TestWebApplication\TestWebApplication.csproj", "{52F59A40-E51C-4393-843C-F7AC234268CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices1", "Microservices1\Microservices1.csproj", "{52F59A40-E51C-4393-843C-F7AC234268CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices2", "Microservices2\Microservices2.csproj", "{ED98FA76-03AD-4DEE-B713-7C5536BEFA67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{52F59A40-E51C-4393-843C-F7AC234268CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52F59A40-E51C-4393-843C-F7AC234268CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52F59A40-E51C-4393-843C-F7AC234268CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED98FA76-03AD-4DEE-B713-7C5536BEFA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED98FA76-03AD-4DEE-B713-7C5536BEFA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED98FA76-03AD-4DEE-B713-7C5536BEFA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED98FA76-03AD-4DEE-B713-7C5536BEFA67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

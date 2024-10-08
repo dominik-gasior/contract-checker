@@ -1,6 +1,6 @@
 using ContractChecker;
 
-namespace TestWebApplication.Models;
+namespace Microservices2.Models;
 
 public class CompanyDTO : IContract
 {
@@ -9,4 +9,8 @@ public class CompanyDTO : IContract
     public string Address { get; set; }
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
+    public CompanyDTO Company { get; set; }
+
+    // [JsonIgnore]
+    // public string Country { get; init; }
 }
