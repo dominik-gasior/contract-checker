@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Reflection;
 
-
-namespace ContractChecker;
+namespace ContractChecker.Extensions;
 
 internal static class AssemblyExtensions
 {
@@ -13,10 +12,10 @@ internal static class AssemblyExtensions
             var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
 
             var type = assembly.GetTypes()
-            .FirstOrDefault(t => t.Name == className && typeof(IContract).IsAssignableFrom(t));
+                .FirstOrDefault(t => t.Name == className);
 
             if (type == null)
-                throw new Exception($"Class '{className}' not found or does not implement IContract.");
+                throw new Exception($"Class '{className}' not found.");
 
             var obj = Activator.CreateInstance(type);
             InitializeProperties(obj);
@@ -29,19 +28,7 @@ internal static class AssemblyExtensions
         }
     }
 
-    internal static Dictionary<string, IContract?>? GetContracts()
-    {
-        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
-
-        var contracts = assembly.GetTypes()
-            .Where(t => typeof(IContract).IsAssignableFrom(t) && !t.IsInterface)
-            .Select(t => new KeyValuePair<string, IContract?>(t.Name, (IContract?)Activator.CreateInstance(t)))
-            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-        return contracts != null && contracts.Count != 0 ? contracts : null;
-    }
-
-    internal static void InitializeProperties(object? obj)
+    private static void InitializeProperties(object? obj)
     {
         if (obj == null)
             return;
@@ -54,7 +41,7 @@ internal static class AssemblyExtensions
         }
     }
 
-    internal static void SetPropertyValue(PropertyInfo? property, object obj)
+    private static void SetPropertyValue(PropertyInfo? property, object obj)
     {
         if (property.CanWrite)
         {

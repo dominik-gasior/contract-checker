@@ -1,4 +1,4 @@
-namespace ContractChecker;
+namespace ContractChecker.Extensions;
 
 internal static class ContractExtensions
 {

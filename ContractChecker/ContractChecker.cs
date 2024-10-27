@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ContractChecker.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -24,8 +25,6 @@ public static class Checker
             {
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync($"Class {className} not found.");
-                // TODO: Log the exception
-                return;
             }
         });
 

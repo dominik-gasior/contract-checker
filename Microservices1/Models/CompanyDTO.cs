@@ -1,9 +1,6 @@
-using ContractChecker;
-using ContractChecker.JsonConverters;
+namespace Microservices1.Models;
 
-namespace TestWebApplication.Models;
-
-public record CompanyDTO : IContract
+public record CompanyDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -11,7 +8,6 @@ public record CompanyDTO : IContract
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
     public CompanyDTO Company { get; set; }
-
-    [JsonOptional]
+    
     public string Country { get; init; }
 }

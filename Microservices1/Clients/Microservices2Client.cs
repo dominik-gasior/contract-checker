@@ -1,5 +1,3 @@
-using System;
-
 namespace Microservices1.Clients;
 
 internal class Microservices2Client
