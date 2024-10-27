@@ -1,14 +1,13 @@
 using System.Text.Json;
 
-namespace ContractChecker;
+namespace ContractChecker.Extensions;
 
 internal class JsonExtensions
 {
     public static string Serialize(object obj)
         => JsonSerializer.Serialize(obj, new JsonSerializerOptions
         {
-            WriteIndented = true,
-            Converters = { new JsonOptionalConverter() }
+            WriteIndented = true
         });
 
     public static bool CompareJson(string json1, string json2)

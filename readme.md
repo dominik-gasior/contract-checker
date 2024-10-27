@@ -1,24 +1,39 @@
 # ContractChecker
 
-Biblioteka sluzaca do testowania komunikacji pomiedzy mikroserwisami.
+A library helps to check contracts between microservices.
 
-### Cel biblioteki
+### Goal
 
-Pozbycie się problemu spowodowanego tym, ze trzeba pamietac o aktualizacje kontraktow pomiedzy serwisami a nie zawsze pamietamy o aktualizacje kontraktów i moze stac sie niezgodne pomiędzy serwisami.
+Removing the problem caused by the need to update contracts between services, and we do not always remember to update contracts and they may become inconsistent between services.
 
-### Opis
+### Description
 
-Aplikacja działa na systemie health checków. Health check komunikuje się z usługami, które są połączone z główną usługą, a następnie pobiera od nich strukture kontraktów, aby upewnić się, ze struktura kontraktow jest zgodna. Wystarczy ze jeden kontrakt nie jest zgodny i health check zwroci informacje ze stan aplikacji jest unhealthy i zaloguje to w loggerze jako critical.
+The application works on the system of health checks. Health check communicates with services that are connected to the main service, and then retrieves contract structures from them to ensure that the contract structure is consistent. It is enough that one contract is not consistent and the health check will return information that the application status is unhealthy and log it in the logger as critical.
 
-Jeden health check sprawdza 1 usluge.
+Once health check checks only one service.
 
-Kontrakty pomiedzy uslugami moga posiadac tzw. pola opcjonalne, które mogą nie być brane pod uwage, jesli
+### Example configurations
 
-### Dostępne health checki
+```csharp
+// add microservices2 http client
+builder.Services.AddHttpClient<Microservices2Client>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8001");
+});
 
-- sprawdzajacy kontrakty pomiedzy mikrouslugami
-- sprawdzajacy endpointy oraz zgodnosc metod HTTP - TODO
+// add contract checker health check
+builder.Services.AddHealthChecks()
+    .AddContractCheckerHealthCheck("ContractChecker", new ContractCheckerConfiguration
+    {
+        ServiceName = "Microservices2",
+        HttpClient = typeof(Microservices2Client),
+        Endpoint = "/contract",
+        ContractDTOs = [
+            new ContractDTO(typeof(CityDTO), "CityDTO"),
+            new ContractDTO(typeof(CompanyDTO), "CompanyDTO")
+        ]
+    });
 
-### Przykładowa konfiguracja
-
-> TODO
+// Add contract checker endpoint
+app.AddContractCheckerEndpoint("/contract");
+```

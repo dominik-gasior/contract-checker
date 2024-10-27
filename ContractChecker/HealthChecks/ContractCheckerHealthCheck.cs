@@ -1,51 +1,54 @@
+using ContractChecker.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace ContractChecker;
+namespace ContractChecker.HealthChecks;
 
-public abstract class ContractCheckerHealthCheck : IHealthCheck
+internal sealed class ContractCheckerHealthCheck : IHealthCheck
 {
     /// <summary>
     /// ExternalClients collection which it is needed to fetch http clients which you can check.
     /// <para>Key -> Service name</para>
     /// <para>Value -> HttpClient</para>
     /// </summary>
-    private Dictionary<string, HttpClientDTO> ExternalClients;
-    private readonly Dictionary<string, IContract?> contracts;
+    private readonly ContractCheckerConfiguration _clientConfigurations;
+    private readonly HttpClient _httpClient;
 
-    public ContractCheckerHealthCheck()
+    public ContractCheckerHealthCheck(
+        IHttpClientFactory httpClientFactory,
+        ContractCheckerConfiguration clientConfigurations)
     {
-        contracts = AssemblyExtensions.GetContracts() ?? new Dictionary<string, IContract?>();
+        _clientConfigurations = clientConfigurations;
+        _httpClient = httpClientFactory.CreateClient(_clientConfigurations.HttpClient.Name);
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        ExternalClients = AddExternalClients();
-
-        if (contracts is null || contracts.Count == 0)
+        var contracts = _clientConfigurations.ContractDTOs.ToList();
+        
+        if (contracts.Count == 0)
             return HealthCheckResult.Unhealthy("Contracts are not loaded");
-
-        foreach (var client in ExternalClients)
+        
+        var serviceName = _clientConfigurations.ServiceName;
+        
+        foreach (var contract in contracts)
         {
-            foreach (var contract in contracts)
-            {
-                var contractName = contract.Key;
-                var response = await GetResponse(client.Value.HttpClient, client.Value.Endpoint, contractName);
+            var destinationContractDTO = await GetResponse(
+                _httpClient,
+                _clientConfigurations.Endpoint,
+                contract.DestinationName);
 
-                if (response == null)
-                    return HealthCheckResult.Unhealthy($"Client {client.Key} is not healthy or not reachable");
+            if (destinationContractDTO == null)
+                return HealthCheckResult.Unhealthy($"Client {serviceName} is not healthy or not reachable");
 
-                var contractDTO = ContractExtensions.GetDTO(contractName);
+            var sourceContractDTO = ContractExtensions.GetDTO(contract.SourceName.Name);
 
-                if (!JsonExtensions.CompareJson(contractDTO, response))
-                    return HealthCheckResult.Unhealthy($"Contract {contract.GetType().Name} is not valid for {client.Key}");
-            }
+            if (!JsonExtensions.CompareJson(sourceContractDTO, destinationContractDTO))
+                return HealthCheckResult.Unhealthy($"Contract {sourceContractDTO.GetType().Name} is not valid for {serviceName}");
         }
 
         return HealthCheckResult.Healthy();
     }
-
-    protected abstract Dictionary<string, HttpClientDTO> AddExternalClients();
-
+    
     private async Task<string?> GetResponse(HttpClient httpClient, string endpoint, string contractName)
     {
         try

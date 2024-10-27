@@ -1,7 +1,11 @@
 namespace ContractChecker;
 
-public record HttpClientDTO
+public record ContractCheckerConfiguration
 {
-    public HttpClient HttpClient { get; init; }
-    public string Endpoint { get; init; }
+    public required string ServiceName { get; init; }
+    public required Type HttpClient { get; init; }
+    public required string Endpoint { get; init; }
+    public required IEnumerable<ContractDTO> ContractDTOs { get; init; }
 }
+
+public record ContractDTO(Type SourceName, string DestinationName);

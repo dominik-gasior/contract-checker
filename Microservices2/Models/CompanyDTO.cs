@@ -1,8 +1,6 @@
-using ContractChecker;
-
 namespace Microservices2.Models;
 
-public class CompanyDTO : IContract
+public class CompanyDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -10,7 +8,6 @@ public class CompanyDTO : IContract
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
     public CompanyDTO Company { get; set; }
-
-    // [JsonIgnore]
-    // public string Country { get; init; }
+    
+    public string Country { get; init; }
 }

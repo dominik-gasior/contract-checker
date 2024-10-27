@@ -15,6 +15,8 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
+
+// add contract checker endpoint
 app.AddContractCheckerEndpoint("/contract");
 
 app.Run();
