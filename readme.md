@@ -25,9 +25,13 @@ builder.Services.AddHttpClient<Microservices2Client>(client =>
 builder.Services.AddHealthChecks()
     .AddContractCheckerHealthCheck("ContractChecker", new ContractCheckerConfiguration
     {
+        // destination service name
         ServiceName = "Microservices2",
+        // http client for destination service
         HttpClient = typeof(Microservices2Client),
+        // destination endpoint
         Endpoint = "/contract",
+        // add contracts which you want to check
         ContractDTOs = [
             new ContractDTO(typeof(CityDTO), "CityDTO"),
             new ContractDTO(typeof(CompanyDTO), "CompanyDTO")
